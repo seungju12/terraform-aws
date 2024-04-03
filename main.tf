@@ -35,6 +35,6 @@ module "create_asg" {
   vpc_id     = module.create_vpc.vpc_id
   subnet_id  = module.create_vpc.subnet_id
   blog_tmp   = module.create_tmp.blog_tmp
-  target_arn    = module.create_alb.target_arn
+  target_arn = module.create_alb.target_arn
   depends_on = [module.create_tmp]
 }

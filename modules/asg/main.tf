@@ -17,9 +17,9 @@ resource "aws_autoscaling_group" "asg" {
 
 ### 오토 스케일링 정책 ###
 resource "aws_autoscaling_policy" "add_instance" {
-  name                      = "add-instance"
-  policy_type = "TargetTrackingScaling"
-  autoscaling_group_name    = aws_autoscaling_group.asg.name
+  name                   = "add-instance"
+  policy_type            = "TargetTrackingScaling"
+  autoscaling_group_name = aws_autoscaling_group.asg.name
 
   target_tracking_configuration {
     predefined_metric_specification {

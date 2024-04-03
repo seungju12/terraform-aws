@@ -5,10 +5,10 @@ resource "aws_vpc" "vpc" {
 
 ### 서브넷 생성 ###
 resource "aws_subnet" "subnet" {
-  for_each          = var.subnet
-  cidr_block        = each.value
-  vpc_id            = aws_vpc.vpc.id
-  availability_zone = each.key
+  for_each                = var.subnet
+  cidr_block              = each.value
+  vpc_id                  = aws_vpc.vpc.id
+  availability_zone       = each.key
   map_public_ip_on_launch = true
 }
 

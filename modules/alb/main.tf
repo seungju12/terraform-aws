@@ -3,7 +3,7 @@ resource "aws_lb" "alb" {
   name               = "blog-alb"
   subnets            = var.subnet_id
   load_balancer_type = "application"
-  security_groups = [aws_security_group.alb-sg.id]
+  security_groups    = [aws_security_group.alb-sg.id]
 }
 
 ### 리스너 생성 ###
@@ -36,11 +36,11 @@ resource "aws_security_group_rule" "port-80" {
 
 ### 아웃바운드 모든 트래픽 허용 ###
 resource "aws_security_group_rule" "outbound" {
-  type = "egress"
-  from_port = 0
-  to_port = 0
-  protocol = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.alb-sg.id
 }
 
@@ -48,12 +48,12 @@ resource "aws_security_group_rule" "outbound" {
 resource "aws_lb_target_group" "target" {
   name        = "blog-alb-target-group"
   vpc_id      = var.vpc_id
-  port        = 80 # ami 변경 시 3000으로 수정
+  port        = 3000
   protocol    = "HTTP"
   target_type = "instance"
 
   health_check {
     enabled = true
-    path = "/"
+    path    = "/"
   }
 }
