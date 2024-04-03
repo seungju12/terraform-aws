@@ -57,7 +57,7 @@ module "create_asg" {
 ##################### region = osaka #####################
 
 
-/*
+
 ### VPC 생성 모듈 ###
 module "create_vpc_osaka" {
   source = ".\\modules\\vpc"
@@ -69,8 +69,9 @@ module "create_vpc_osaka" {
 ### ALB 생성 모듈 ###
 module "create_alb_osaka" {
   source     = ".\\modules\\alb"
-  vpc_id     = module.create_vpc.vpc_id
-  subnet_id  = module.create_vpc.subnet_id
+  vpc_id     = module.create_vpc_osaka.vpc_id
+  subnet_id  = module.create_vpc_osaka.subnet_id
+  depends_on = [module.create_vpc_osaka]
   providers = {
     aws = aws.osaka
   }
@@ -78,10 +79,10 @@ module "create_alb_osaka" {
 
 ### 시작 템플릿 생성 모듈 ###
 module "create_tmp_osaka" {
-  source     = ".\\modules\\tmp"
-  vpc_id     = module.create_vpc.vpc_id
-  subnet_id  = module.create_vpc.subnet_id
-  alb-sg_id  = module.create_alb.alb-sg_id
+  source    = ".\\modules\\tmp"
+  vpc_id    = module.create_vpc_osaka.vpc_id
+  subnet_id = module.create_vpc_osaka.subnet_id
+  alb-sg_id = module.create_alb_osaka.alb-sg_id
   providers = {
     aws = aws.osaka
   }
@@ -90,13 +91,13 @@ module "create_tmp_osaka" {
 ### ASG 생성 모듈 ###
 module "create_asg_osaka" {
   source     = ".\\modules\\asg"
-  vpc_id     = module.create_vpc.vpc_id
-  subnet_id  = module.create_vpc.subnet_id
-  blog_tmp   = module.create_tmp.blog_tmp
-  target_arn = module.create_alb.target_arn
+  vpc_id     = module.create_vpc_osaka.vpc_id
+  subnet_id  = module.create_vpc_osaka.subnet_id
+  blog_tmp   = module.create_tmp_osaka.blog_tmp
+  target_arn = module.create_alb_osaka.target_arn
+  depends_on = [module.create_alb_osaka, module.create_tmp_osaka]
   providers = {
     aws = aws.osaka
   }
 }
 
-*/

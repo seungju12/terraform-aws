@@ -1,3 +1,13 @@
+locals {
+  subnet = data.aws_region.current.name == "ap-northeast-2" ? {
+    "ap-northeast-2a" = "10.1.1.0/24"
+    "ap-northeast-2c" = "10.1.2.0/24"
+    } : {
+    "ap-northeast-3a" = "10.1.1.0/24"
+    "ap-northeast-3c" = "10.1.2.0/24"
+  }
+}
+
 ### VPC 생성 ###
 resource "aws_vpc" "vpc" {
   cidr_block = "10.1.0.0/16"
@@ -5,7 +15,7 @@ resource "aws_vpc" "vpc" {
 
 ### 서브넷 생성 ###
 resource "aws_subnet" "subnet" {
-  for_each                = var.subnet
+  for_each                = local.subnet
   cidr_block              = each.value
   vpc_id                  = aws_vpc.vpc.id
   availability_zone       = each.key
@@ -24,7 +34,7 @@ resource "aws_route_table" "rtb" {
 
 ### 서브넷과 라우팅 테이블 연결 ###
 resource "aws_route_table_association" "connect-rtb" {
-  for_each       = var.subnet
+  for_each       = local.subnet
   subnet_id      = aws_subnet.subnet[each.key].id
   route_table_id = aws_route_table.rtb.id
 }
