@@ -40,7 +40,7 @@ resource "aws_security_group_rule" "outbound" {
 resource "aws_launch_template" "tmp" {
   name                   = "blog"
   instance_type          = "t2.small"
-  image_id               = "ami-0c5725ed1d11eebfa" # public ami-id
+  image_id               = data.aws_ami.blog-ami.id
   vpc_security_group_ids = [aws_security_group.tmp-sg.id]
 
   user_data = filebase64("${path.module}/tmp-file.sh")

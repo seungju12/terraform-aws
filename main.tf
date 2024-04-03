@@ -17,7 +17,6 @@ provider "aws" {
 }
 
 
-
 ##################### region = seoul #####################
 
 
@@ -25,9 +24,6 @@ provider "aws" {
 ### VPC 생성 모듈 ###
 module "create_vpc" {
   source = ".\\modules\\vpc"
-  providers = {
-    aws = aws
-  }
 }
 
 ### ALB 생성 모듈 ###
@@ -36,21 +32,14 @@ module "create_alb" {
   vpc_id     = module.create_vpc.vpc_id
   subnet_id  = module.create_vpc.subnet_id
   depends_on = [module.create_vpc]
-  providers = {
-    aws = aws
-  }
 }
 
 ### 시작 템플릿 생성 모듈 ###
 module "create_tmp" {
-  source     = ".\\modules\\tmp"
-  vpc_id     = module.create_vpc.vpc_id
-  subnet_id  = module.create_vpc.subnet_id
-  alb-sg_id  = module.create_alb.alb-sg_id
-  depends_on = [module.create_alb]
-  providers = {
-    aws = aws
-  }
+  source    = ".\\modules\\tmp"
+  vpc_id    = module.create_vpc.vpc_id
+  subnet_id = module.create_vpc.subnet_id
+  alb-sg_id = module.create_alb.alb-sg_id
 }
 
 ### ASG 생성 모듈 ###
@@ -60,10 +49,7 @@ module "create_asg" {
   subnet_id  = module.create_vpc.subnet_id
   blog_tmp   = module.create_tmp.blog_tmp
   target_arn = module.create_alb.target_arn
-  depends_on = [module.create_tmp]
-  providers = {
-    aws = aws
-  }
+  depends_on = [module.create_tmp, module.create_alb]
 }
 
 
@@ -71,9 +57,9 @@ module "create_asg" {
 ##################### region = osaka #####################
 
 
-
+/*
 ### VPC 생성 모듈 ###
-module "create_vpc" {
+module "create_vpc_osaka" {
   source = ".\\modules\\vpc"
   providers = {
     aws = aws.osaka
@@ -81,38 +67,36 @@ module "create_vpc" {
 }
 
 ### ALB 생성 모듈 ###
-module "create_alb" {
+module "create_alb_osaka" {
   source     = ".\\modules\\alb"
   vpc_id     = module.create_vpc.vpc_id
   subnet_id  = module.create_vpc.subnet_id
-  depends_on = [module.create_vpc]
   providers = {
     aws = aws.osaka
   }
 }
 
 ### 시작 템플릿 생성 모듈 ###
-module "create_tmp" {
+module "create_tmp_osaka" {
   source     = ".\\modules\\tmp"
   vpc_id     = module.create_vpc.vpc_id
   subnet_id  = module.create_vpc.subnet_id
   alb-sg_id  = module.create_alb.alb-sg_id
-  depends_on = [module.create_alb]
   providers = {
     aws = aws.osaka
   }
 }
 
 ### ASG 생성 모듈 ###
-module "create_asg" {
+module "create_asg_osaka" {
   source     = ".\\modules\\asg"
   vpc_id     = module.create_vpc.vpc_id
   subnet_id  = module.create_vpc.subnet_id
   blog_tmp   = module.create_tmp.blog_tmp
   target_arn = module.create_alb.target_arn
-  depends_on = [module.create_tmp]
   providers = {
     aws = aws.osaka
   }
 }
 
+*/
