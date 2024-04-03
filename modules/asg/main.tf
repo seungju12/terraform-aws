@@ -1,3 +1,4 @@
+### 오토 스케일링 그룹 생성 ###
 resource "aws_autoscaling_group" "asg" {
   name                      = "blog-asg"
   vpc_zone_identifier       = var.subnet_id
@@ -14,6 +15,7 @@ resource "aws_autoscaling_group" "asg" {
   }
 }
 
+### 오토 스케일링 정책 ###
 resource "aws_autoscaling_policy" "add_instance" {
   name                      = "add-instance"
   policy_type = "TargetTrackingScaling"
@@ -27,7 +29,7 @@ resource "aws_autoscaling_policy" "add_instance" {
   }
 }
 
-# Lambda 트리거 용 알람
+### Lambda 트리거 알람 ###
 resource "aws_cloudwatch_metric_alarm" "cpu_alarm_high" {
   alarm_name          = "cpu_alarm_high"
   comparison_operator = "GreaterThanThreshold" # 임계값보다 클 때

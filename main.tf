@@ -1,3 +1,4 @@
+### aws 프로바이더 ###
 terraform {
   required_providers {
     aws = {
@@ -6,10 +7,12 @@ terraform {
   }
 }
 
+### VPC 생성 모듈 ###
 module "create_vpc" {
   source = ".\\modules\\vpc"
 }
 
+### ALB 생성 모듈 ###
 module "create_alb" {
   source     = ".\\modules\\alb"
   vpc_id     = module.create_vpc.vpc_id
@@ -17,6 +20,7 @@ module "create_alb" {
   depends_on = [module.create_vpc]
 }
 
+### 시작 템플릿 생성 모듈 ###
 module "create_tmp" {
   source     = ".\\modules\\tmp"
   vpc_id     = module.create_vpc.vpc_id
@@ -25,6 +29,7 @@ module "create_tmp" {
   depends_on = [module.create_alb]
 }
 
+### ASG 생성 모듈 ###
 module "create_asg" {
   source     = ".\\modules\\asg"
   vpc_id     = module.create_vpc.vpc_id
