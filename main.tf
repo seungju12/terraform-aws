@@ -23,20 +23,19 @@ provider "aws" {
 
 ### VPC 생성 모듈 ###
 module "create_vpc" {
-  source = ".\\modules\\vpc"
+  source = "./modules/vpc"
 }
 
 ### ALB 생성 모듈 ###
 module "create_alb" {
-  source     = ".\\modules\\alb"
+  source     = "./modules/alb"
   vpc_id     = module.create_vpc.vpc_id
   subnet_id  = module.create_vpc.subnet_id
-  depends_on = [module.create_vpc]
 }
 
 ### 시작 템플릿 생성 모듈 ###
 module "create_tmp" {
-  source    = ".\\modules\\tmp"
+  source    = "./modules/tmp"
   vpc_id    = module.create_vpc.vpc_id
   subnet_id = module.create_vpc.subnet_id
   alb-sg_id = module.create_alb.alb-sg_id
@@ -44,12 +43,11 @@ module "create_tmp" {
 
 ### ASG 생성 모듈 ###
 module "create_asg" {
-  source     = ".\\modules\\asg"
+  source     = "./modules/asg"
   vpc_id     = module.create_vpc.vpc_id
   subnet_id  = module.create_vpc.subnet_id
   blog_tmp   = module.create_tmp.blog_tmp
   target_arn = module.create_alb.target_arn
-  depends_on = [module.create_tmp, module.create_alb]
 }
 
 
@@ -60,7 +58,7 @@ module "create_asg" {
 
 ### VPC 생성 모듈 ###
 module "create_vpc_osaka" {
-  source = ".\\modules\\vpc"
+  source = "./modules/vpc"
   providers = {
     aws = aws.osaka
   }
@@ -68,10 +66,9 @@ module "create_vpc_osaka" {
 
 ### ALB 생성 모듈 ###
 module "create_alb_osaka" {
-  source     = ".\\modules\\alb"
+  source     = "./modules/alb"
   vpc_id     = module.create_vpc_osaka.vpc_id
   subnet_id  = module.create_vpc_osaka.subnet_id
-  depends_on = [module.create_vpc_osaka]
   providers = {
     aws = aws.osaka
   }
@@ -79,7 +76,7 @@ module "create_alb_osaka" {
 
 ### 시작 템플릿 생성 모듈 ###
 module "create_tmp_osaka" {
-  source    = ".\\modules\\tmp"
+  source    = "./modules/tmp"
   vpc_id    = module.create_vpc_osaka.vpc_id
   subnet_id = module.create_vpc_osaka.subnet_id
   alb-sg_id = module.create_alb_osaka.alb-sg_id
@@ -90,14 +87,56 @@ module "create_tmp_osaka" {
 
 ### ASG 생성 모듈 ###
 module "create_asg_osaka" {
-  source     = ".\\modules\\asg"
+  source     = "./modules/asg"
   vpc_id     = module.create_vpc_osaka.vpc_id
   subnet_id  = module.create_vpc_osaka.subnet_id
   blog_tmp   = module.create_tmp_osaka.blog_tmp
   target_arn = module.create_alb_osaka.target_arn
-  depends_on = [module.create_alb_osaka, module.create_tmp_osaka]
   providers = {
     aws = aws.osaka
   }
 }
 
+
+
+##################### s3 #####################
+
+
+
+module "create_admin_s3" {
+  source = "./modules/s3-admin"
+}
+
+module "create_admin_s3_osaka" {
+  source = "./modules/s3-admin"
+  providers = {
+    aws = aws.osaka
+  }
+}
+
+module "create_iam_role" {
+  source = "./modules/s3-iam"
+  admin_seoul_arn = module.create_admin_s3.admin_seoul_arn
+  admin_osaka_arn = module.create_admin_s3_osaka.admin_osaka_arn
+}
+
+module "create_s3_replica_rule" {
+  source = "./modules/s3-replica"
+  replication_role_arn = module.create_iam_role.replication_role_arn
+  admin_seoul_id = module.create_admin_s3.admin_seoul_id
+  admin_osaka_id = module.create_admin_s3_osaka.admin_osaka_id
+  admin_seoul_arn = module.create_admin_s3.admin_seoul_arn
+  admin_osaka_arn = module.create_admin_s3_osaka.admin_osaka_arn
+}
+
+module "create_s3_replica_rule_osaka" {
+  source = "./modules/s3-replica"
+  replication_role_arn = module.create_iam_role.replication_role_arn
+  admin_seoul_id = module.create_admin_s3.admin_seoul_id
+  admin_osaka_id = module.create_admin_s3_osaka.admin_osaka_id
+  admin_seoul_arn = module.create_admin_s3.admin_seoul_arn
+  admin_osaka_arn = module.create_admin_s3_osaka.admin_osaka_arn
+  providers = {
+    aws = aws.osaka
+  }
+}
