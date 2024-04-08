@@ -5,22 +5,22 @@ locals {
 
 ### S3 버킷 생성 ###
 resource "aws_s3_bucket" "admin-page" {
-  bucket = "qwerblog-admin-${local.s3_name}"
-  object_lock_enabled = false
+  bucket              = "qwerblog-admin-${local.s3_name}"
+  object_lock_enabled = false # 객체 잠금 비활성화
 }
 
 ### S3 객체 소유권 제어 ###
 resource "aws_s3_bucket_ownership_controls" "ownership" {
   bucket = aws_s3_bucket.admin-page.id
-  
+
   rule {
-    object_ownership = "BucketOwnerPreferred"
+    object_ownership = "BucketOwnerPreferred" # 버킷 소유자 선호
   }
 }
 
 ### S3 퍼블릭 액세스 허용 ###
 resource "aws_s3_bucket_public_access_block" "access-block" {
-  bucket = aws_s3_bucket.admin-page.id
+  bucket                  = aws_s3_bucket.admin-page.id
   block_public_acls       = false
   block_public_policy     = false
   ignore_public_acls      = false
@@ -39,7 +39,7 @@ resource "aws_s3_bucket_versioning" "admin-page-versioning" {
 ### S3 정적 웹 사이트 호스팅 ###
 resource "aws_s3_bucket_website_configuration" "static-website" {
   bucket = aws_s3_bucket.admin-page.id
-  
+
   index_document {
     suffix = "index.html"
   }
@@ -55,5 +55,5 @@ resource "aws_s3_bucket_policy" "policy" {
   policy = templatefile("${path.module}/s3-policy.json.tpl", {
     bucket_name = aws_s3_bucket.admin-page.bucket
   })
-  depends_on = [ aws_s3_bucket_public_access_block.access-block ]
+  depends_on = [aws_s3_bucket_public_access_block.access-block]
 }

@@ -1,3 +1,4 @@
+### 지역 변수 정의 ###
 locals {
   subnet = data.aws_region.current.name == "ap-northeast-2" ? {
     "ap-northeast-2a" = "10.1.1.0/24"

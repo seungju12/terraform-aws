@@ -19,7 +19,7 @@ provider "aws" {
 
 ##################### region = seoul #####################
 
-/*
+
 
 ### VPC 생성 모듈 ###
 module "create_vpc" {
@@ -28,9 +28,9 @@ module "create_vpc" {
 
 ### ALB 생성 모듈 ###
 module "create_alb" {
-  source     = "./modules/alb"
-  vpc_id     = module.create_vpc.vpc_id
-  subnet_id  = module.create_vpc.subnet_id
+  source    = "./modules/alb"
+  vpc_id    = module.create_vpc.vpc_id
+  subnet_id = module.create_vpc.subnet_id
 }
 
 ### 시작 템플릿 생성 모듈 ###
@@ -66,9 +66,9 @@ module "create_vpc_osaka" {
 
 ### ALB 생성 모듈 ###
 module "create_alb_osaka" {
-  source     = "./modules/alb"
-  vpc_id     = module.create_vpc_osaka.vpc_id
-  subnet_id  = module.create_vpc_osaka.subnet_id
+  source    = "./modules/alb"
+  vpc_id    = module.create_vpc_osaka.vpc_id
+  subnet_id = module.create_vpc_osaka.subnet_id
   providers = {
     aws = aws.osaka
   }
@@ -96,7 +96,7 @@ module "create_asg_osaka" {
     aws = aws.osaka
   }
 }
-*/
+
 
 
 ##################### s3 #####################
@@ -137,68 +137,68 @@ module "create_md_s3_osaka" {
 }
 
 module "create_iam_role" {
-  source = "./modules/s3-iam"
+  source          = "./modules/s3-iam"
   admin_seoul_arn = module.create_admin_s3.admin_seoul_arn
   admin_osaka_arn = module.create_admin_s3_osaka.admin_osaka_arn
   image_seoul_arn = module.create_image_s3.image_seoul_arn
   image_osaka_arn = module.create_image_s3_osaka.image_osaka_arn
-  md_seoul_arn = module.create_md_s3.md_seoul_arn
-  md_osaka_arn = module.create_md_s3_osaka.md_osaka_arn
+  md_seoul_arn    = module.create_md_s3.md_seoul_arn
+  md_osaka_arn    = module.create_md_s3_osaka.md_osaka_arn
 }
 
 module "create_s3_replica_rule" {
-  source = "./modules/s3-replica"
+  source               = "./modules/s3-replica"
   replication_role_arn = module.create_iam_role.replication_role_arn
-  admin_seoul_id = module.create_admin_s3.admin_seoul_id
-  admin_osaka_id = module.create_admin_s3_osaka.admin_osaka_id
-  admin_seoul_arn = module.create_admin_s3.admin_seoul_arn
-  admin_osaka_arn = module.create_admin_s3_osaka.admin_osaka_arn
-  image_seoul_id = module.create_image_s3.image_seoul_id
-  image_osaka_id = module.create_image_s3_osaka.image_osaka_id
-  image_seoul_arn = module.create_image_s3.image_seoul_arn
-  image_osaka_arn = module.create_image_s3_osaka.image_osaka_arn
-  md_seoul_id = module.create_md_s3.md_seoul_id
-  md_osaka_id = module.create_md_s3_osaka.md_osaka_id
-  md_seoul_arn = module.create_md_s3.md_seoul_arn
-  md_osaka_arn = module.create_md_s3_osaka.md_osaka_arn
-  depends_on = [ 
+  admin_seoul_id       = module.create_admin_s3.admin_seoul_id
+  admin_osaka_id       = module.create_admin_s3_osaka.admin_osaka_id
+  admin_seoul_arn      = module.create_admin_s3.admin_seoul_arn
+  admin_osaka_arn      = module.create_admin_s3_osaka.admin_osaka_arn
+  image_seoul_id       = module.create_image_s3.image_seoul_id
+  image_osaka_id       = module.create_image_s3_osaka.image_osaka_id
+  image_seoul_arn      = module.create_image_s3.image_seoul_arn
+  image_osaka_arn      = module.create_image_s3_osaka.image_osaka_arn
+  md_seoul_id          = module.create_md_s3.md_seoul_id
+  md_osaka_id          = module.create_md_s3_osaka.md_osaka_id
+  md_seoul_arn         = module.create_md_s3.md_seoul_arn
+  md_osaka_arn         = module.create_md_s3_osaka.md_osaka_arn
+  depends_on = [
     module.create_admin_s3,
     module.create_image_s3,
     module.create_md_s3
-   ]
+  ]
 }
 
 module "create_s3_replica_rule_osaka" {
-  source = "./modules/s3-replica"
+  source               = "./modules/s3-replica"
   replication_role_arn = module.create_iam_role.replication_role_arn
-  admin_seoul_id = module.create_admin_s3.admin_seoul_id
-  admin_osaka_id = module.create_admin_s3_osaka.admin_osaka_id
-  admin_seoul_arn = module.create_admin_s3.admin_seoul_arn
-  admin_osaka_arn = module.create_admin_s3_osaka.admin_osaka_arn
-  image_seoul_id = module.create_image_s3.image_seoul_id
-  image_osaka_id = module.create_image_s3_osaka.image_osaka_id
-  image_seoul_arn = module.create_image_s3.image_seoul_arn
-  image_osaka_arn = module.create_image_s3_osaka.image_osaka_arn
-  md_seoul_id = module.create_md_s3.md_seoul_id
-  md_osaka_id = module.create_md_s3_osaka.md_osaka_id
-  md_seoul_arn = module.create_md_s3.md_seoul_arn
-  md_osaka_arn = module.create_md_s3_osaka.md_osaka_arn
-  depends_on = [ 
+  admin_seoul_id       = module.create_admin_s3.admin_seoul_id
+  admin_osaka_id       = module.create_admin_s3_osaka.admin_osaka_id
+  admin_seoul_arn      = module.create_admin_s3.admin_seoul_arn
+  admin_osaka_arn      = module.create_admin_s3_osaka.admin_osaka_arn
+  image_seoul_id       = module.create_image_s3.image_seoul_id
+  image_osaka_id       = module.create_image_s3_osaka.image_osaka_id
+  image_seoul_arn      = module.create_image_s3.image_seoul_arn
+  image_osaka_arn      = module.create_image_s3_osaka.image_osaka_arn
+  md_seoul_id          = module.create_md_s3.md_seoul_id
+  md_osaka_id          = module.create_md_s3_osaka.md_osaka_id
+  md_seoul_arn         = module.create_md_s3.md_seoul_arn
+  md_osaka_arn         = module.create_md_s3_osaka.md_osaka_arn
+  depends_on = [
     module.create_admin_s3_osaka,
     module.create_image_s3_osaka,
     module.create_md_s3_osaka
-   ]
+  ]
   providers = {
     aws = aws.osaka
   }
 }
 
 module "create_admin_mrap" {
-  source = "./modules/s3-mrap"
+  source         = "./modules/s3-mrap"
   admin_seoul_id = module.create_admin_s3.admin_seoul_id
   admin_osaka_id = module.create_admin_s3_osaka.admin_osaka_id
   image_seoul_id = module.create_image_s3.image_seoul_id
   image_osaka_id = module.create_image_s3_osaka.image_osaka_id
-  md_seoul_id = module.create_md_s3.md_seoul_id
-  md_osaka_id = module.create_md_s3_osaka.md_osaka_id
+  md_seoul_id    = module.create_md_s3.md_seoul_id
+  md_osaka_id    = module.create_md_s3_osaka.md_osaka_id
 }

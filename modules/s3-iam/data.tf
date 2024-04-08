@@ -32,7 +32,7 @@ data "aws_iam_policy_document" "replication" {
 
   statement {
     effect = "Allow"
-    
+
     actions = [
       "s3:GetObjectVersionForReplication",
       "s3:GetObjectVersionAcl",
