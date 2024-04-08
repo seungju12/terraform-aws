@@ -4,15 +4,15 @@ locals {
 }
 
 ### S3 버킷 생성 ###
-resource "aws_s3_bucket" "admin-page" {
-  bucket = "qwerblog-admin-${local.s3_name}"
+resource "aws_s3_bucket" "md" {
+  bucket = "qwerblog-md-${local.s3_name}"
   object_lock_enabled = false
 }
 
 ### S3 객체 소유권 제어 ###
 resource "aws_s3_bucket_ownership_controls" "ownership" {
-  bucket = aws_s3_bucket.admin-page.id
-  
+  bucket = aws_s3_bucket.md.id
+
   rule {
     object_ownership = "BucketOwnerPreferred"
   }
@@ -20,7 +20,7 @@ resource "aws_s3_bucket_ownership_controls" "ownership" {
 
 ### S3 퍼블릭 액세스 허용 ###
 resource "aws_s3_bucket_public_access_block" "access-block" {
-  bucket = aws_s3_bucket.admin-page.id
+  bucket = aws_s3_bucket.md.id
   block_public_acls       = false
   block_public_policy     = false
   ignore_public_acls      = false
@@ -28,32 +28,19 @@ resource "aws_s3_bucket_public_access_block" "access-block" {
 }
 
 ### S3 버전 관리 활성화 ###
-resource "aws_s3_bucket_versioning" "admin-page-versioning" {
-  bucket = aws_s3_bucket.admin-page.id
+resource "aws_s3_bucket_versioning" "versioning" {
+  bucket = aws_s3_bucket.md.id
 
   versioning_configuration {
     status = "Enabled"
   }
 }
 
-### S3 정적 웹 사이트 호스팅 ###
-resource "aws_s3_bucket_website_configuration" "static-website" {
-  bucket = aws_s3_bucket.admin-page.id
-  
-  index_document {
-    suffix = "index.html"
-  }
-
-  error_document {
-    key = "404.html"
-  }
-}
-
 ### S3 정책 적용 ###
 resource "aws_s3_bucket_policy" "policy" {
-  bucket = aws_s3_bucket.admin-page.id
+  bucket = aws_s3_bucket.md.id
   policy = templatefile("${path.module}/s3-policy.json.tpl", {
-    bucket_name = aws_s3_bucket.admin-page.bucket
+    bucket_name = aws_s3_bucket.md.bucket
   })
   depends_on = [ aws_s3_bucket_public_access_block.access-block ]
 }
