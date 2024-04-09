@@ -13,3 +13,7 @@ output "admin_seoul_arn" {
 output "admin_osaka_arn" {
   value = aws_s3_bucket.admin-page.arn
 }
+
+output "admin_seoul_bucket" {
+  value = aws_s3_bucket.admin-page.bucket
+}

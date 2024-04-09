@@ -1,17 +1,19 @@
 ### 지역 변수 정의 ###
 locals {
+  vpc = data.aws_region.current.name == "ap-northeast-2" ? "10.1.0.0/16" : "10.2.0.0/16"
+
   subnet = data.aws_region.current.name == "ap-northeast-2" ? {
     "ap-northeast-2a" = "10.1.1.0/24"
     "ap-northeast-2c" = "10.1.2.0/24"
     } : {
-    "ap-northeast-3a" = "10.1.1.0/24"
-    "ap-northeast-3c" = "10.1.2.0/24"
+    "ap-northeast-3a" = "10.2.1.0/24"
+    "ap-northeast-3c" = "10.2.2.0/24"
   }
 }
 
 ### VPC 생성 ###
 resource "aws_vpc" "vpc" {
-  cidr_block = "10.1.0.0/16"
+  cidr_block = local.vpc
 }
 
 ### 서브넷 생성 ###
