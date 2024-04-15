@@ -1,6 +1,8 @@
 ### 지역 변수 정의 ###
 locals {
-  s3_name = data.aws_region.current.name == var.region_1 ? 1 : 2
+  s3_name = data.aws_region.current.name == var.region ? 1 : 2
+  lambda_arn = data.aws_region.current.name == var.region ? var.lambda_cloudfront_ttl_expired_arn : var.lambda_cloudfront_ttl_expired_2_arn
+  lambda_name = data.aws_region.current == var.region ? var.lambda_cloudfront_ttl_expired_name : var.lambda_cloudfront_ttl_expired_2_name
 }
 
 ### S3 버킷 생성 ###
@@ -56,4 +58,22 @@ resource "aws_s3_bucket_policy" "policy" {
     bucket_name = aws_s3_bucket.admin-page.bucket
   })
   depends_on = [aws_s3_bucket_public_access_block.access-block]
+}
+
+resource "aws_lambda_permission" "permission" {
+  statement_id = "AllowS3Invocation"
+  action = "lambda:InvokeFunction"
+  function_name = local.lambda_name
+  principal = "s3.amazonaws.com"
+  source_arn = aws_s3_bucket.admin-page.arn
+}
+
+### 이벤트 알림 Lambda 트리거 연결 ###
+resource "aws_s3_bucket_notification" "notification" {
+  bucket = aws_s3_bucket.admin-page.id
+
+  lambda_function {
+    lambda_function_arn = local.lambda_arn
+    events = ["s3:ObjectCreated:*"]
+  }
 }

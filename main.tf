@@ -32,6 +32,7 @@ locals {
   region_1 = "ap-northeast-2" # 사용할 리전 1
   region_2 = "ap-northeast-1" # 사용할 리전 2
   blog = "qwerblog" # 사용할 블로그 이름 / S3 버킷의 이름이 전세계적으로 고유해야 하므로 바꿔줘야 함.
+  domain = "qwerblog.com" # 사용할 도메인 이름
 }
 
 
@@ -119,13 +120,21 @@ module "create_asg_2" {
 module "create_admin_s3" {
   source = "./modules/s3-admin"
   blog = local.blog
-  region_1 = local.region_1
+  region = local.region_1
+  lambda_cloudfront_ttl_expired_arn = module.create_lambda.lambda_cloudfront_ttl_expired_arn
+  lambda_cloudfront_ttl_expired_2_arn = module.create_lambda_2.lambda_cloudfront_ttl_expired_arn
+  lambda_cloudfront_ttl_expired_name = module.create_lambda.lambda_cloudfront_ttl_expired_name
+  lambda_cloudfront_ttl_expired_2_name = module.create_lambda_2.lambda_cloudfront_ttl_expired_name
 }
 
 module "create_admin_s3_2" {
   source = "./modules/s3-admin"
   blog = local.blog
-  region_1 = local.region_1
+  region = local.region_1
+  lambda_cloudfront_ttl_expired_arn = module.create_lambda.lambda_cloudfront_ttl_expired_arn
+  lambda_cloudfront_ttl_expired_2_arn = module.create_lambda_2.lambda_cloudfront_ttl_expired_arn
+  lambda_cloudfront_ttl_expired_name = module.create_lambda.lambda_cloudfront_ttl_expired_name
+  lambda_cloudfront_ttl_expired_2_name = module.create_lambda_2.lambda_cloudfront_ttl_expired_name
   providers = {
     aws = aws.r2
   }
@@ -134,14 +143,14 @@ module "create_admin_s3_2" {
 ### 이미지 S3 생성 ###
 module "create_image_s3" {
   blog = local.blog
-  region_1 = local.region_1
+  region = local.region_1
   source = "./modules/s3-image"
 }
 
 module "create_image_s3_2" {
   source = "./modules/s3-image"
   blog = local.blog
-  region_1 = local.region_1
+  region = local.region_1
   providers = {
     aws = aws.r2
   }
@@ -151,13 +160,13 @@ module "create_image_s3_2" {
 module "create_md_s3" {
   source = "./modules/s3-md"
   blog = local.blog
-  region_1 = local.region_1
+  region = local.region_1
 }
 
 module "create_md_s3_2" {
   source = "./modules/s3-md"
   blog = local.blog
-  region_1 = local.region_1
+  region = local.region_1
   providers = {
     aws = aws.r2
   }
@@ -307,6 +316,9 @@ module "create_api-gateway" {
   lambda_get_s3_signed_url_arn = module.create_lambda.lambda_get_s3_signed_url_arn
   lambda_post_blog_to_dynamodb_name = module.create_lambda.lambda_post_blog_to_dynamodb_name
   lambda_post_blog_to_dynamodb_arn = module.create_lambda.lambda_post_blog_to_dynamodb_arn
+  region_1_acm = var.region_1_acm
+  region_2_acm = var.region_2_acm
+  region = local.region_1
 }
 
 module "create_api-gateway_2" {
@@ -319,7 +331,43 @@ module "create_api-gateway_2" {
   lambda_get_s3_signed_url_arn = module.create_lambda.lambda_get_s3_signed_url_arn
   lambda_post_blog_to_dynamodb_name = module.create_lambda.lambda_post_blog_to_dynamodb_name
   lambda_post_blog_to_dynamodb_arn = module.create_lambda.lambda_post_blog_to_dynamodb_arn
+  region_1_acm = var.region_1_acm
+  region_2_acm = var.region_2_acm
+  region = local.region_1
   providers = {
     aws = aws.r2
   }
+}
+
+
+##################### Route 53 / CloudFront #####################
+
+
+### CloudFront ###
+module "cloudfront" {
+  source = "./modules/cloudfront"
+  admin_1_bucket_regional_domain_name = module.create_admin_s3.admin_bucket_regional_domain_name
+  admin_2_bucket_regional_domain_name = module.create_admin_s3_2.admin_bucket_regional_domain_name
+  admin_1_id = module.create_admin_s3.admin_1_id
+  admin_2_id = module.create_admin_s3_2.admin_2_id
+  us_acm = var.us_acm
+}
+
+
+### Route53 ###
+module "route53" {
+  source = "./modules/route53"
+  domain = local.domain
+  region_1 = local.region_1
+  region_2 = local.region_2
+  domain_name1 = module.cloudfront.domain_name1
+  domain_name2 = module.cloudfront.domain_name2
+  zone_id1 = module.cloudfront.zone_id1
+  zone_id2 = module.cloudfront.zone_id2
+  api_1_id = module.create_api-gateway.api_id
+  api_2_id = module.create_api-gateway_2.api_id
+  api_domain_name = module.create_api-gateway.api_domain_name
+  api_domain_name_2 = module.create_api-gateway_2.api_domain_name
+  api_zone_id = module.create_api-gateway.api_zone_id
+  api_zone_id_2 = module.create_api-gateway_2.api_zone_id
 }

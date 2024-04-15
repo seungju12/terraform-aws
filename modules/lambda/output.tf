@@ -29,3 +29,11 @@ output "lambda_get_s3_signed_url_arn" {
 output "lambda_post_blog_to_dynamodb_arn" {
   value = aws_lambda_function.post_blog_to_dynamodb.invoke_arn
 }
+
+output "lambda_cloudfront_ttl_expired_arn" {
+  value = aws_lambda_function.cloudfront_ttl_expired.arn
+}
+
+output "lambda_cloudfront_ttl_expired_name" {
+  value = aws_lambda_function.cloudfront_ttl_expired.function_name
+}

@@ -1,6 +1,6 @@
 ### 지역 변수 정의 ###
 locals {
-  s3_name = data.aws_region.current.name == var.region_1 ? 1 : 2
+  s3_name = data.aws_region.current.name == var.region ? 1 : 2
 }
 
 ### S3 버킷 생성 ###

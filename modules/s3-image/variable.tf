@@ -1,4 +1,4 @@
-variable "region_1" {
+variable "region" {
   type = string
 }
 

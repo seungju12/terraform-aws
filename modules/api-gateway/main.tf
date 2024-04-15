@@ -1,3 +1,8 @@
+locals {
+  domain_name_number = data.aws_region.current.name == var.region ? 1 : 2
+  acm = data.aws_region.current.name == var.region ? var.region_1_acm : var.region_2_acm
+}
+
 ### HTTP API Gateway 생성 ###
 resource "aws_apigatewayv2_api" "http-api" {
   name = "qwer-http"
@@ -106,4 +111,22 @@ resource "aws_apigatewayv2_stage" "stage" {
   api_id = aws_apigatewayv2_api.http-api.id
   name = "test"
   auto_deploy = true
+}
+
+### API Gateway 사용자 지정 도메인 생성 ###
+resource "aws_apigatewayv2_domain_name" "api" {
+  domain_name = "api${local.domain_name_number}.qwerblog.com"
+  
+  domain_name_configuration {
+    certificate_arn = local.acm
+    endpoint_type = "REGIONAL"
+    security_policy = "TLS_1_2"
+  }
+}
+
+### API Gateway를 사용자 지정 도메인에 매핑 ###
+resource "aws_apigatewayv2_api_mapping" "api" {
+  api_id = aws_apigatewayv2_api.http-api.id
+  domain_name = aws_apigatewayv2_domain_name.api.id
+  stage = "test"
 }
