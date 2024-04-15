@@ -1,23 +1,23 @@
-variable "admin_seoul_arn" {
+variable "admin_1_arn" {
   type = string
 }
 
-variable "admin_osaka_arn" {
+variable "admin_2_arn" {
   type = string
 }
 
-variable "image_seoul_arn" {
+variable "image_1_arn" {
   type = string
 }
 
-variable "image_osaka_arn" {
+variable "image_2_arn" {
   type = string
 }
 
-variable "md_seoul_arn" {
+variable "md_1_arn" {
   type = string
 }
 
-variable "md_osaka_arn" {
+variable "md_2_arn" {
   type = string
 }

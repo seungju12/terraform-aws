@@ -2,10 +2,10 @@ variable "codebuild_role_arn" {
   type = string
 }
 
-variable "admin_seoul_bucket" {
+variable "admin_1_bucket" {
   type = string
 }
 
-variable "admin_seoul_id" {
+variable "admin_1_id" {
   type = string
 }

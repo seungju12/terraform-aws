@@ -21,7 +21,7 @@ resource "aws_codebuild_project" "build" {
 
   artifacts {
     type = "S3"
-    location = var.admin_seoul_bucket # 빌드한 결과물을 서울의 admin S3 버킷에 저장
+    location = var.admin_1_bucket # 빌드한 결과물을 서울의 admin S3 버킷에 저장
   }
 
   logs_config {
@@ -32,7 +32,7 @@ resource "aws_codebuild_project" "build" {
 
     s3_logs {
       status = "ENABLED"
-      location = "${var.admin_seoul_id}/build-log" # 지정된 경로에 로그 저장
+      location = "${var.admin_1_id}/build-log" # 지정된 경로에 로그 저장
     }
   }
 }

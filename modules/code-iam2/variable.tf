@@ -1,4 +1,4 @@
-variable "admin_seoul_arn" {
+variable "admin_1_arn" {
   type = string
 }
 

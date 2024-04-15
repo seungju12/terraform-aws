@@ -1,19 +1,19 @@
-output "admin_seoul_id" {
+output "admin_1_id" {
   value = aws_s3_bucket.admin-page.id
 }
 
-output "admin_osaka_id" {
+output "admin_2_id" {
   value = aws_s3_bucket.admin-page.id
 }
 
-output "admin_seoul_arn" {
+output "admin_1_arn" {
   value = aws_s3_bucket.admin-page.arn
 }
 
-output "admin_osaka_arn" {
+output "admin_2_arn" {
   value = aws_s3_bucket.admin-page.arn
 }
 
-output "admin_seoul_bucket" {
+output "admin_1_bucket" {
   value = aws_s3_bucket.admin-page.bucket
 }

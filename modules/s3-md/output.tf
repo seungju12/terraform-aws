@@ -1,15 +1,15 @@
-output "md_seoul_id" {
+output "md_1_id" {
   value = aws_s3_bucket.md.id
 }
 
-output "md_osaka_id" {
+output "md_2_id" {
   value = aws_s3_bucket.md.id
 }
 
-output "md_seoul_arn" {
+output "md_1_arn" {
   value = aws_s3_bucket.md.arn
 }
 
-output "md_osaka_arn" {
+output "md_2_arn" {
   value = aws_s3_bucket.md.arn
 }

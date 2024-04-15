@@ -1,11 +1,11 @@
 ### 지역 변수 정의 ###
 locals {
-  s3_name = data.aws_region.current.name == "ap-northeast-2" ? 1 : 2
+  s3_name = data.aws_region.current.name == var.region_1 ? 1 : 2
 }
 
 ### S3 버킷 생성 ###
 resource "aws_s3_bucket" "image" {
-  bucket              = "qwerblog-image-${local.s3_name}"
+  bucket              = "${var.blog}-image-${local.s3_name}"
   object_lock_enabled = false # 객체 잠금 비활성화
 }
 

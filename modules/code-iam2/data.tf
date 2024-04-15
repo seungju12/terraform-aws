@@ -41,7 +41,7 @@ data "aws_iam_policy_document" "codebuild" {
         "s3:GetBucketLocation"
     ]
 
-    resources = [var.admin_seoul_arn]
+    resources = [var.admin_1_arn]
   }
 
   statement {

@@ -1,51 +1,59 @@
+variable "region_1" {
+  type = string
+}
+
+variable "region_2" {
+  type = string
+}
+
 variable "replication_role_arn" {
   type = string
 }
 
-variable "admin_seoul_id" {
+variable "admin_1_id" {
   type = string
 }
 
-variable "admin_osaka_id" {
+variable "admin_2_id" {
   type = string
 }
 
-variable "admin_seoul_arn" {
+variable "admin_1_arn" {
   type = string
 }
 
-variable "admin_osaka_arn" {
+variable "admin_2_arn" {
   type = string
 }
 
-variable "image_seoul_id" {
+variable "image_1_id" {
   type = string
 }
 
-variable "image_osaka_id" {
+variable "image_2_id" {
   type = string
 }
 
-variable "image_seoul_arn" {
+variable "image_1_arn" {
   type = string
 }
 
-variable "image_osaka_arn" {
+variable "image_2_arn" {
   type = string
 }
 
-variable "md_seoul_id" {
+variable "md_1_id" {
   type = string
 }
 
-variable "md_osaka_id" {
+variable "md_2_id" {
   type = string
 }
 
-variable "md_seoul_arn" {
+variable "md_1_arn" {
   type = string
 }
 
-variable "md_osaka_arn" {
+variable "md_2_arn" {
   type = string
 }

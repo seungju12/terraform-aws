@@ -4,11 +4,11 @@ resource "aws_s3control_multi_region_access_point" "admin-mrap" {
     name = "admin-mrap"
 
     region {
-      bucket = var.admin_seoul_id
+      bucket = var.admin_1_id
     }
 
     region {
-      bucket = var.admin_osaka_id
+      bucket = var.admin_2_id
     }
 
     public_access_block { # 퍼블릭 액세스 허용
@@ -37,11 +37,11 @@ resource "aws_s3control_multi_region_access_point" "image-mrap" {
     name = "image-mrap"
 
     region {
-      bucket = var.image_seoul_id
+      bucket = var.image_1_id
     }
 
     region {
-      bucket = var.image_osaka_id
+      bucket = var.image_2_id
     }
 
     public_access_block { # 퍼블릭 액세스 허용
@@ -70,11 +70,11 @@ resource "aws_s3control_multi_region_access_point" "md-mrap" {
     name = "md-mrap"
 
     region {
-      bucket = var.md_seoul_id
+      bucket = var.md_1_id
     }
 
     region {
-      bucket = var.md_osaka_id
+      bucket = var.md_2_id
     }
 
     public_access_block { # 퍼블릭 액세스 허용

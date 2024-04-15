@@ -8,12 +8,11 @@ resource "aws_lb" "alb" {
 
 ### 리스너 생성 ###
 resource "aws_lb_listener" "alb-listener" {
-  for_each          = var.certificate_arn
   load_balancer_arn = aws_lb.alb.arn
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = var.certificate_arn[data.aws_region.current.name]
+  certificate_arn   = var.certificate_arn
 
   default_action {
     type             = "forward"

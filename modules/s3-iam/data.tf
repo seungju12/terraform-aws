@@ -21,12 +21,12 @@ data "aws_iam_policy_document" "replication" {
     ]
 
     resources = [
-      var.admin_seoul_arn,
-      var.admin_osaka_arn,
-      var.image_seoul_arn,
-      var.image_osaka_arn,
-      var.md_seoul_arn,
-      var.md_osaka_arn
+      var.admin_1_arn,
+      var.admin_2_arn,
+      var.image_1_arn,
+      var.image_2_arn,
+      var.md_1_arn,
+      var.md_2_arn
     ]
   }
 
@@ -40,12 +40,12 @@ data "aws_iam_policy_document" "replication" {
     ]
 
     resources = [
-      "${var.admin_seoul_arn}/*",
-      "${var.admin_osaka_arn}/*",
-      "${var.image_seoul_arn}/*",
-      "${var.image_osaka_arn}/*",
-      "${var.md_seoul_arn}/*",
-      "${var.md_osaka_arn}/*"
+      "${var.admin_1_arn}/*",
+      "${var.admin_2_arn}/*",
+      "${var.image_1_arn}/*",
+      "${var.image_2_arn}/*",
+      "${var.md_1_arn}/*",
+      "${var.md_2_arn}/*"
     ]
   }
 
@@ -59,12 +59,12 @@ data "aws_iam_policy_document" "replication" {
     ]
 
     resources = [
-      "${var.admin_seoul_arn}/*",
-      "${var.admin_osaka_arn}/*",
-      "${var.image_seoul_arn}/*",
-      "${var.image_osaka_arn}/*",
-      "${var.md_seoul_arn}/*",
-      "${var.md_osaka_arn}/*"
+      "${var.admin_1_arn}/*",
+      "${var.admin_2_arn}/*",
+      "${var.image_1_arn}/*",
+      "${var.image_2_arn}/*",
+      "${var.md_1_arn}/*",
+      "${var.md_2_arn}/*"
     ]
   }
 }
