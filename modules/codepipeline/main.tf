@@ -11,43 +11,43 @@ resource "aws_s3_bucket" "artifact_store" {
 
 resource "aws_s3_bucket_versioning" "versioning" {
   bucket = aws_s3_bucket.artifact_store.bucket
-  
+
   versioning_configuration {
     status = "Enabled"
   }
 }
 
 resource "aws_codestarconnections_connection" "github" {
-  name = "github-connection"
+  name          = "github-connection"
   provider_type = "GitHub"
 }
 
 resource "aws_codepipeline" "pipeline" {
-  name = "pipeline-admin"
-  role_arn = var.codepipeline_role_arn
-  pipeline_type = "V2"
+  name           = "pipeline-admin"
+  role_arn       = var.codepipeline_role_arn
+  pipeline_type  = "V2"
   execution_mode = "QUEUED"
 
   artifact_store {
     location = aws_s3_bucket.artifact_store.bucket
-    type = "S3"
+    type     = "S3"
   }
 
   stage {
     name = "Source"
 
     action {
-      name = "Source"
-      category = "Source"
-      owner = "AWS"
-      provider = "CodeStarSourceConnection"
-      version = "1"
+      name             = "Source"
+      category         = "Source"
+      owner            = "AWS"
+      provider         = "CodeStarSourceConnection"
+      version          = "1"
       output_artifacts = ["source_output"]
 
       configuration = {
-        ConnectionArn = aws_codestarconnections_connection.github.arn
+        ConnectionArn    = aws_codestarconnections_connection.github.arn
         FullRepositoryId = "sungmin-choi/blog_admin"
-        BranchName = "main"
+        BranchName       = "main"
       }
     }
   }
@@ -56,14 +56,14 @@ resource "aws_codepipeline" "pipeline" {
     name = "Build"
 
     action {
-      name = "Build"
-      category = "Build"
-      owner = "AWS"
-      provider = "CodeBuild"
-      version = "1"
-      input_artifacts = ["source_output"]
+      name             = "Build"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      version          = "1"
+      input_artifacts  = ["source_output"]
       output_artifacts = ["build_output"]
-      
+
       configuration = {
         ProjectName = "build-admin"
       }
@@ -74,16 +74,16 @@ resource "aws_codepipeline" "pipeline" {
     name = "Deploy"
 
     action {
-      name = "Deploy"
-      category = "Deploy"
-      owner = "AWS"
-      provider = "S3"
-      version = "1"
+      name            = "Deploy"
+      category        = "Deploy"
+      owner           = "AWS"
+      provider        = "S3"
+      version         = "1"
       input_artifacts = ["build_output"]
 
       configuration = {
         BucketName = aws_s3_bucket.artifact_store.bucket
-        Extract = true
+        Extract    = true
       }
     }
   }

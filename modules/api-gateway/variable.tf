@@ -39,5 +39,5 @@ variable "region_2_acm" {
 }
 
 variable "region" {
-  
+
 }
