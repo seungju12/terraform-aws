@@ -371,3 +371,12 @@ module "route53" {
   api_zone_id       = module.create_api-gateway.api_zone_id
   api_zone_id_2     = module.create_api-gateway_2.api_zone_id
 }
+
+
+##################### DynamoDB #####################
+
+
+module "create_dynamodb_table" {
+  source = "./modules/dynamodb"
+  region_2 = local.region_2
+}
