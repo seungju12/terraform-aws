@@ -3,6 +3,7 @@ resource "aws_dynamodb_table" "table" {
   hash_key = "post_id"
   range_key = "date"
   billing_mode = "PAY_PER_REQUEST"
+  stream_enabled = true
   
   attribute {
     name = "post_id"
