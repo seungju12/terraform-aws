@@ -1,3 +1,6 @@
+# 글로벌 사내 기술 블로그 플랫폼 구축
+https://plant-rice-d9c.notion.site/8bb2b6b353ae4dcb8478db6603596073
+
 ## 사전 준비
 - IAM Access Key / Secret Key
 - ACM SSL/TSL 인증서
